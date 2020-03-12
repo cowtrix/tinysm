@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace TinySM
 {
 	public struct Reference<T> where T : TrackedObject
 	{
 		public Guid GUID;
+		[JsonIgnore]
 		public T Value => TrackedObject.Get<T>(GUID);
 
 		public static implicit operator T(Reference<T> d) => d.Value;

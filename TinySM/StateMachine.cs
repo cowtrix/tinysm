@@ -23,5 +23,10 @@ namespace TinySM
 			CurrentState = Definition.Value.Step(CurrentState.Value, input, out var output);
 			return output;
 		}
+
+		public void Reset()
+		{
+			CurrentState = Definition.Value.RootState;
+		}
 	}
 }

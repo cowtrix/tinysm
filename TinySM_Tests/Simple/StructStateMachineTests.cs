@@ -6,6 +6,7 @@ namespace Simple
 {
 	public struct TestStruct
 	{
+		public string MyValue;
 	}
 
 	[TestClass]
@@ -13,7 +14,7 @@ namespace Simple
 	{
 		protected override SimpleState<TestStruct> RandomSimpleState()
 		{
-			return new SimpleState<TestStruct>(new TestStruct());
+			return new SimpleState<TestStruct>(new TestStruct { MyValue = RandomString(20) });
 		}
 	}
 }

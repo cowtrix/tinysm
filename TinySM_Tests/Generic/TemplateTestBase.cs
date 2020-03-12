@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using TinySM;
@@ -17,6 +18,29 @@ namespace Test
 		}
 
 		protected abstract State<TIn, TOut> RandomState();
+
+		/// <summary>
+		/// Do a round-trip serialization and check that nothing changes
+		/// </summary>
+		[TestMethod]
+		public void CanSerializeDefinition()
+		{
+			var rootState = RandomState();
+			var def = new StateMachineDefinition<TIn, TOut>(rootState);
+			var secondState = def.AddState(RandomState());
+			rootState.AddTransition(secondState, new AlwaysCondition<TIn, TOut>());
+			secondState.AddTransition(rootState, new AlwaysCondition<TIn, TOut>());
+
+			var jsonSettings = new JsonSerializerSettings()
+			{
+				TypeNameHandling = TypeNameHandling.Auto,
+				Formatting = Formatting.Indented
+			};
+
+			var json = JsonConvert.SerializeObject(def, jsonSettings);
+			var des = JsonConvert.DeserializeObject<StateMachineDefinition<TIn, TOut>>(json, jsonSettings);
+			Assert.AreEqual(json, JsonConvert.SerializeObject(des, jsonSettings));
+		}
 
 		[TestMethod]
 		public void CanInstantiate()
@@ -56,7 +80,6 @@ namespace Test
 			var rootState = RandomState();
 			var def = new StateMachineDefinition<TIn, TOut>(rootState);
 			var secondState = def.AddState(RandomState());
-			
 			rootState.AddTransition(secondState, new AlwaysCondition<TIn, TOut>());
 			secondState.AddTransition(rootState, new AlwaysCondition<TIn, TOut>());
 

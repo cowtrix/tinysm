@@ -4,6 +4,12 @@ using TinySM.Conditions;
 
 namespace TinySM
 {
+	/// <summary>
+	/// A transition represents a decision about whether to go from the OriginState to the DestinationState
+	/// determined by the Condition
+	/// </summary>
+	/// <typeparam name="TIn"></typeparam>
+	/// <typeparam name="TOut"></typeparam>
 	public class Transition<TIn, TOut> : TrackedObject
 	{
 		public Reference<State<TIn, TOut>> OriginState { get; set; }
