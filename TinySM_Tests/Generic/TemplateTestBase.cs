@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using TinySM;
 using TinySM.Conditions;
 
@@ -72,6 +73,21 @@ namespace Test
 		}
 
 		/// <summary>
+		/// Setup SM with two states and move from the first to the second
+		/// </summary>
+		[TestMethod]
+		public async Task Async_CanStepOnceWithAlwaysCondition()
+		{
+			var sm = new StateMachineDefinition<TIn, TOut>()
+				.AddState(RandomState())
+					.AddTransition(RandomState(), new AlwaysCondition<TIn, TOut>())
+				.Definition.CreateStateMachine();
+			var root = sm.CurrentState.Value.GUID;
+			await sm.StepAsync(default);
+			Assert.AreNotEqual(root, sm.CurrentState.GUID);
+		}
+
+		/// <summary>
 		/// Setup SM with two cycling states and check we go back and forth between them
 		/// </summary>
 		[TestMethod]
@@ -90,6 +106,28 @@ namespace Test
 			Assert.AreEqual(secondState.GUID, sm.CurrentState.GUID);
 			
 			CheckOutput(root, input, sm.Step(input));
+			Assert.AreEqual(root.GUID, sm.CurrentState.GUID);
+		}
+
+		/// <summary>
+		/// Setup SM with two cycling states and check we go back and forth between them
+		/// </summary>
+		[TestMethod]
+		public async Task Async_CanStepCycleWithAlwaysCondition()
+		{
+			var rootState = RandomState();
+			var def = new StateMachineDefinition<TIn, TOut>(rootState);
+			var secondState = def.AddState(RandomState());
+			rootState.AddTransition(secondState, new AlwaysCondition<TIn, TOut>());
+			secondState.AddTransition(rootState, new AlwaysCondition<TIn, TOut>());
+
+			var sm = def.CreateStateMachine();
+			var root = sm.CurrentState.Value;
+			var input = GetInput();
+			CheckOutput(secondState, input, await sm.StepAsync(input));
+			Assert.AreEqual(secondState.GUID, sm.CurrentState.GUID);
+
+			CheckOutput(root, input, await sm.StepAsync(input));
 			Assert.AreEqual(root.GUID, sm.CurrentState.GUID);
 		}
 

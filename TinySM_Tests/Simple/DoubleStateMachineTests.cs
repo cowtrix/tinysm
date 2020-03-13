@@ -5,13 +5,20 @@ using TinySM;
 namespace Simple
 {
 	[TestClass]
-	public class DoubleStateMachineTests : SimpleTemplateTestBase<double>
+	public class DoubleStateMachineComparisonTests : ComparisonTests<double>
 	{
-		private static Random random = new Random();
-
 		protected override SimpleState<double> RandomSimpleState()
 		{
-			return new SimpleState<double>(random.NextDouble());
+			return new SimpleState<double>(Random.NextDouble());
+		}
+	}
+
+	[TestClass]
+	public class DoubleStateMachineTests : SimpleTemplateTestBase<double>
+	{
+		protected override SimpleState<double> RandomSimpleState()
+		{
+			return new SimpleState<double>(Random.NextDouble());
 		}
 	}
 }

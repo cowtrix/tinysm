@@ -24,6 +24,13 @@ namespace TinySM
 			return output;
 		}
 
+		public async Task<TOut> StepAsync(TIn input)
+		{
+			var result = await Definition.Value.StepAsync(CurrentState.Value, input);
+			CurrentState = result.State;
+			return result.Output;
+		}
+
 		public void Reset()
 		{
 			CurrentState = Definition.Value.RootState;
