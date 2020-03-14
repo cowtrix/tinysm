@@ -1,0 +1,65 @@
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace TinySM
+{
+	public class StateMachineDefinition<TIn, TOut> : TrackedObject
+	{
+		[JsonProperty]
+		public List<State<TIn, TOut>> States { get; private set; }
+		[JsonProperty]
+		public Reference<State<TIn, TOut>> RootState { get; private set; }
+
+		/// <summary>
+		/// Constructor should only be called by Json deserializer
+		/// </summary>
+		internal StateMachineDefinition() : base() { }
+
+		public StateMachineDefinition(State<TIn, TOut> root = null)
+		{
+			States = new List<State<TIn, TOut>>();
+			RootState = root;
+			AddState(root);
+		}
+
+		public State<TIn, TOut> AddState(State<TIn, TOut> state)
+		{
+			if(state == null)
+			{
+				return null;
+			}
+			if(States.Any(s => s.GUID == state.GUID))
+			{
+				// We already have this state registered
+				return state;
+			}
+			if(RootState.Value == null)
+			{
+				// Set this to be the root state if none exists
+				RootState = state;
+			}
+			state.Definition = this;
+			States.Add(state);
+			return state;
+		}
+
+		public State<TIn, TOut> Step(State<TIn, TOut> startingState, TIn input, out TOut output)
+		{
+			var transition = startingState.Transitions
+				.FirstOrDefault(t => t.Condition.ShouldTransition(startingState, t.DestinationState, input));
+			if(transition == null)
+			{
+				return startingState.OnReentry(input, out output);
+			}
+			startingState.OnExit(input, transition.DestinationState);
+			return transition.DestinationState.Value.OnEntry(input, out output);
+		}
+
+		public StateMachine<TIn, TOut> CreateStateMachine()
+		{
+			return new StateMachine<TIn, TOut>(this);
+		}
+	}
+}
