@@ -2,9 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace TinySM
 {
+	public struct StepResult<TIn, TOut>
+	{
+		public State<TIn, TOut> State;
+		public TOut Output;
+	}
+
 	public class StateMachineDefinition<TIn, TOut> : TrackedObject
 	{
 		[JsonProperty]
@@ -55,6 +62,18 @@ namespace TinySM
 			}
 			startingState.OnExit(input, transition.DestinationState);
 			return transition.DestinationState.Value.OnEntry(input, out output);
+		}
+
+		public async Task<StepResult<TIn, TOut>> StepAsync(State<TIn, TOut> startingState, TIn input)
+		{
+			var transition = startingState.Transitions
+				.FirstOrDefault(t => t.Condition.ShouldTransition(startingState, t.DestinationState, input));
+			if (transition == null)
+			{
+				return await startingState.OnReentryAsync(input);
+			}
+			startingState.OnExit(input, transition.DestinationState);
+			return await transition.DestinationState.Value.OnEntryAsync(input);
 		}
 
 		public StateMachine<TIn, TOut> CreateStateMachine()
