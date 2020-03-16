@@ -7,12 +7,18 @@ using TinySM.Conditions;
 
 namespace TinySM
 {
+	public interface IState
+	{
+		Guid GUID { get; }
+	}
+
+
 	/// <summary>
 	/// A State receives some input of type TIn and emits some output of type TOut
 	/// </summary>
 	/// <typeparam name="TIn"></typeparam>
 	/// <typeparam name="TOut"></typeparam>
-	public class State<TIn, TOut> : TrackedObject
+	public class State<TIn, TOut> : TrackedObject, IState
 	{
 		public List<Transition<TIn, TOut>> Transitions { get; set; }
 		[JsonIgnore]

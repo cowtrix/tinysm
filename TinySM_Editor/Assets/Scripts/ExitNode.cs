@@ -25,6 +25,10 @@ public class ExitNode : MonoBehaviour
 	{
 		var pointerData = data as PointerEventData;
 		NextState = pointerData.pointerCurrentRaycast.gameObject.GetComponent<EntryNode>()?.State;
+		if(NextState?.GUID == State.GUID)
+		{
+			NextState = null;
+		}
 		m_isDragging = true;
 		SetLine(pointerData.position);
 		LineRenderer.SetAllDirty();
@@ -91,5 +95,9 @@ public class ExitNode : MonoBehaviour
 			return;
 		}
 		NextState = node.State;
+		if (NextState.GUID == State.GUID)
+		{
+			NextState = null;
+		}
 	}
 }

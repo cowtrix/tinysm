@@ -12,12 +12,20 @@ namespace TinySM
 		public TOut Output;
 	}
 
-	public class StateMachineDefinition<TIn, TOut> : TrackedObject
+	public interface IStateMachineDefinition
+	{
+		Guid GUID { get; }
+		IEnumerable<IState> StateInterfaces { get; }
+	}
+
+	public class StateMachineDefinition<TIn, TOut> : TrackedObject, IStateMachineDefinition
 	{
 		[JsonProperty]
 		public List<State<TIn, TOut>> States { get; private set; }
 		[JsonProperty]
 		public Reference<State<TIn, TOut>> RootState { get; private set; }
+		[JsonIgnore]
+		public IEnumerable<IState> StateInterfaces => States.Cast<IState>();
 
 		/// <summary>
 		/// Constructor should only be called by Json deserializer

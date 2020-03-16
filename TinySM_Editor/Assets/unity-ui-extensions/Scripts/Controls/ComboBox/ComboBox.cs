@@ -105,7 +105,7 @@ namespace UnityEngine.UI.Extensions
                 _itemsPanelRT = _scrollPanelRT.Find("Items").GetComponent<RectTransform>();
                 //itemPanelLayout = itemsPanelRT.gameObject.GetComponent<LayoutGroup>();
 
-                _canvas = GetComponentInParent<Canvas>();
+                _canvas = UiManager.LevelInstance.GetComponent<Canvas>();
                 _canvasRT = _canvas.GetComponent<RectTransform>();
 
                 _scrollRect = _scrollPanelRT.GetComponent<ScrollRect>();
@@ -247,7 +247,7 @@ namespace UnityEngine.UI.Extensions
         //}
 
 
-        private void RedrawPanel()
+        public void RedrawPanel()
         {
             float scrollbarWidth = _panelItems.Count > ItemsToDisplay ? _scrollBarWidth : 0f;//hide the scrollbar if there's not enough items
             _scrollBarRT.gameObject.SetActive(_panelItems.Count > ItemsToDisplay);

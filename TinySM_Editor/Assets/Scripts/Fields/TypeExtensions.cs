@@ -13,21 +13,35 @@ public static class TypeExtensions
 
 	public static void Refresh()
 	{
-		var allTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(ass => ass.GetTypes());
-		foreach(var t in allTypes)
+		RegisterType(typeof(string), new[] { "string" });
+		RegisterType(typeof(string), new[] { "string" });
+	}
+
+	static void RegisterType(Type t, IEnumerable<string> aliases = null)
+	{
+		m_typeCache[t.FullName] = t;
+		if(aliases == null)
 		{
-			m_typeCache[t.FullName] = t;
+			return;
+		}
+		foreach(var alias in aliases)
+		{
+			m_typeCache[alias] = t;
 		}
 	}
 
 	public static IEnumerable<Type> GetTypes(string hint)
 	{
+		if(string.IsNullOrEmpty(hint))
+		{
+			return new Type[0];
+		}
 		var exact = m_typeCache.SingleOrDefault(kvp => kvp.Key == hint);
 		if(exact.Value != null)
 		{
 			return new[] { exact.Value };
 		}
-		return m_typeCache.Where(kvp => kvp.Key.ToLowerInvariant().Contains(hint.ToLowerInvariant()))
+		return m_typeCache.Where(kvp => kvp.Key.Contains(hint))
 			.Select(kvp => kvp.Value);
 	}
 }

@@ -223,6 +223,21 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  - eventID: 7
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 109025317}
+          m_MethodName: OnScroll
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &109025317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,6 +250,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13ee51f6cbbf41e43be8e014f2d07da5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ScrollSpeed: 1
+  Scale: {x: 0.5, y: 1}
 --- !u!1 &220111301
 GameObject:
   m_ObjectHideFlags: 0
@@ -1194,3 +1211,5 @@ MonoBehaviour:
     type: 3}
   GraphContainer: {fileID: 109025313}
   Skin: {fileID: 11400000, guid: 220ec24356b671946958048e544ca898, type: 2}
+  Fields:
+  - {fileID: 1994480100393450047, guid: b270061e298dad54e8d0fa9206d890f4, type: 3}

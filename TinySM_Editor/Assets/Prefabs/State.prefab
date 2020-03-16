@@ -111,7 +111,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11902a82e375bab409d1c96ca5214121, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DragColour: {r: 1, g: 0, b: 0, a: 1}
   LineOffset: {x: 10, y: 0}
   LineRenderer: {fileID: 6890390437515605542}
   State: {fileID: 6890390437247345819}
@@ -219,7 +218,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 0}
+  m_SizeDelta: {x: 300, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6890390437247345822
 CanvasRenderer:

@@ -157,7 +157,7 @@ namespace UnityEngine.UI.Extensions
                 _itemsPanelRT = _scrollPanelRT.Find("Items").GetComponent<RectTransform>();
                 //itemPanelLayout = itemsPanelRT.gameObject.GetComponent<LayoutGroup>();
 
-                _canvas = GetComponentInParent<Canvas>();
+                _canvas = UiManager.LevelInstance.GetComponent<Canvas>();
                 _canvasRT = _canvas.GetComponent<RectTransform>();
 
                 _scrollRect = _scrollPanelRT.GetComponent<ScrollRect>();

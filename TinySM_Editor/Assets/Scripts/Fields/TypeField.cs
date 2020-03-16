@@ -4,10 +4,11 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UI.Extensions;
 
 public class TypeField : FieldElement<Type>
 {
-	public override Type Value { get; set; }
+	public InputField Input;
 
 	protected override EValidState State
 	{
@@ -15,7 +16,7 @@ public class TypeField : FieldElement<Type>
 		{
 			if(Value == null)
 			{
-				if(string.IsNullOrEmpty(Input.text))
+				if (string.IsNullOrEmpty(Input.text))
 				{
 					return EValidState.None;
 				}
