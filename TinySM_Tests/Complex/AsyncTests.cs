@@ -13,7 +13,7 @@ namespace TinySM_Tests.Complex
 	{
 		public class AsyncIntMultiplierState : State<int, int>
 		{
-			public override State<int, int> OnEntry(int input, out int output)
+			public override StepResult<int, int> OnEntry(int input)
 			{
 				throw new NotImplementedException();
 			}
@@ -28,7 +28,7 @@ namespace TinySM_Tests.Complex
 				};
 			}
 
-			public override State<int, int> OnReentry(int input, out int output)
+			public override StepResult<int, int> OnReentry(int input)
 			{
 				throw new NotImplementedException();
 			}

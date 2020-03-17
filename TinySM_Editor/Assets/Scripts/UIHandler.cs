@@ -7,6 +7,7 @@ public interface IUIHandler
 	Type InputType { get; }
 	Type OutputType { get; }
 	IStateMachineDefinition DefinitionInterface { get; }
+	IEnumerable<Type> StateTypes { get; }
 }
 
 public class UIHandler<TIn, TOut> : IUIHandler
@@ -21,8 +22,13 @@ public class UIHandler<TIn, TOut> : IUIHandler
 
 	public IEnumerable<Type> StateTypes { get; private set; }
 
-	public UIHandler()
+	public UIHandler(StateMachineDefinition<TIn, TOut> definition)
 	{
-		StateTypes = ReflectionExtensions.GetConcreteClasses<IState>();
+		StateMachineDefinition = definition;
+		StateTypes = new[]
+		{
+			//typeof(State<,>).MakeGenericType(InputType, OutputType),
+			typeof(BotState),
+		};
 	}
 }

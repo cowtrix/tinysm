@@ -12,6 +12,7 @@ namespace TinySM
 		Guid GUID { get; }
 	}
 
+	public delegate void InputEvent<TIn>(TIn input);
 
 	/// <summary>
 	/// A State receives some input of type TIn and emits some output of type TOut
@@ -23,6 +24,11 @@ namespace TinySM
 		public List<Transition<TIn, TOut>> Transitions { get; set; }
 		[JsonIgnore]
 		public StateMachineDefinition<TIn, TOut> Definition { get => m_definition; set => m_definition = value; }
+		[JsonIgnore]
+		public InputEvent<TIn> OnEntryEvent;
+		[JsonIgnore]
+		public InputEvent<TIn> OnReentryEvent;
+
 		[JsonProperty]
 		private Reference<StateMachineDefinition<TIn, TOut>> m_definition;
 
@@ -66,10 +72,10 @@ namespace TinySM
 		/// <param name="input">The input to the state</param>
 		/// <param name="output">The output of the state</param>
 		/// <returns>Itself</returns>
-		public virtual State<TIn, TOut> OnEntry(TIn input, out TOut output)
+		public virtual StepResult<TIn, TOut> OnEntry(TIn input)
 		{
-			output = default;
-			return this;
+			OnEntryEvent?.Invoke(input);
+			return default;
 		}
 
 		/// <summary>
@@ -78,9 +84,10 @@ namespace TinySM
 		/// <param name="input">The input to the state</param>
 		/// <param name="output">The output of the state</param>
 		/// <returns>Itself</returns>
-		public virtual State<TIn, TOut> OnReentry(TIn input, out TOut output)
+		public virtual StepResult<TIn, TOut> OnReentry(TIn input)
 		{
-			return OnEntry(input, out output);
+			OnReentryEvent?.Invoke(input);
+			return default;
 		}
 
 		/// <summary>
@@ -89,10 +96,9 @@ namespace TinySM
 		/// <param name="input">The input to the state</param>
 		/// <param name="output">The output of the state</param>
 		/// <returns>Itself</returns>
-		public async virtual Task<StepResult<TIn, TOut>> OnEntryAsync(TIn input)
+		public virtual async Task<StepResult<TIn, TOut>> OnEntryAsync(TIn input)
 		{
-			var state = OnReentry(input, out var output);
-			return new StepResult<TIn, TOut> { State = state, Output = output };
+			return OnEntry(input);
 		}
 
 		/// <summary>
@@ -101,10 +107,9 @@ namespace TinySM
 		/// <param name="input">The input to the state</param>
 		/// <param name="output">The output of the state</param>
 		/// <returns>Itself</returns>
-		public async virtual Task<StepResult<TIn, TOut>> OnReentryAsync(TIn input)
+		public virtual async Task<StepResult<TIn, TOut>> OnReentryAsync(TIn input)
 		{
-			var state = OnEntry(input, out var output);
-			return new StepResult<TIn, TOut> { State = state, Output = output };
+			return OnReentry(input);
 		}
 
 		/// <summary>

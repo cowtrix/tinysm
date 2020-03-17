@@ -6,17 +6,21 @@ namespace Complex
 {
 	public class StringLengthState : State<string, int>
 	{
-		public override State<string, int> OnEntry(string input, out int output)
+		public override StepResult<string, int> OnEntry(string input)
 		{
+			var result = new StepResult<string, int>()
+			{
+				State = this,
+			};
 			if(input == null)
 			{
-				output = 0;
+				result.Output = 0;
 			}
 			else
 			{
-				output = input.Length;
+				result.Output = input.Length;
 			}
-			return this;
+			return result;
 		}
 	}
 

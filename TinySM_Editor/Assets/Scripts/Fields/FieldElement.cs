@@ -21,6 +21,7 @@ public interface IFieldElement
 	Type Type { get; }
 	object Object { get; set; }
 	void Bind(MemberInfo member, object context);
+	GameObject GameObject { get; }
 }
 
 public abstract class FieldElement<T> : MonoBehaviour, IFieldElement<T>
@@ -34,6 +35,10 @@ public abstract class FieldElement<T> : MonoBehaviour, IFieldElement<T>
 
 	protected virtual void Update()
 	{
+		if(!StateImage)
+		{
+			return;
+		}
 		switch (State)
 		{
 			case EValidState.None:
@@ -48,11 +53,16 @@ public abstract class FieldElement<T> : MonoBehaviour, IFieldElement<T>
 		}
 	}
 
-	public void Bind(MemberInfo member, object context)
+	public virtual void Bind(MemberInfo member, object context)
 	{
+		if (Label)
+		{
+			Label.text = member.Name;
+		}
 		m_memberInfo = member;
 		m_context = context;
 		OnValueChanged.RemoveAllListeners();
+		Value = (T)member.GetValue(context);
 		OnValueChanged.AddListener(() =>
 		{
 			m_memberInfo.SetValue(m_context, Value);
@@ -84,4 +94,5 @@ public abstract class FieldElement<T> : MonoBehaviour, IFieldElement<T>
 		set { Value = (T)value; }
 	}
 	public Type Type => typeof(T);
+	public GameObject GameObject => gameObject;
 }

@@ -16,6 +16,7 @@ namespace TinySM
 	{
 		Guid GUID { get; }
 		IEnumerable<IState> StateInterfaces { get; }
+		IState AddState(IState obj);
 	}
 
 	public class StateMachineDefinition<TIn, TOut> : TrackedObject, IStateMachineDefinition
@@ -30,13 +31,24 @@ namespace TinySM
 		/// <summary>
 		/// Constructor should only be called by Json deserializer
 		/// </summary>
-		internal StateMachineDefinition() : base() { }
-
-		public StateMachineDefinition(State<TIn, TOut> root = null)
+		internal StateMachineDefinition() : base() 
 		{
 			States = new List<State<TIn, TOut>>();
+		}
+
+		public StateMachineDefinition(State<TIn, TOut> root = null) : this()
+		{
 			RootState = root;
 			AddState(root);
+		}
+
+		public IState AddState(IState state)
+		{
+			if(!(state is State<TIn, TOut> typedState))
+			{
+				throw new InvalidCastException();
+			}
+			return AddState(typedState);
 		}
 
 		public State<TIn, TOut> AddState(State<TIn, TOut> state)
@@ -60,16 +72,16 @@ namespace TinySM
 			return state;
 		}
 
-		public State<TIn, TOut> Step(State<TIn, TOut> startingState, TIn input, out TOut output)
+		public StepResult<TIn, TOut> Step(State<TIn, TOut> startingState, TIn input)
 		{
 			var transition = startingState.Transitions
 				.FirstOrDefault(t => t.Condition.ShouldTransition(startingState, t.DestinationState, input));
 			if(transition == null)
 			{
-				return startingState.OnReentry(input, out output);
+				return startingState.OnReentry(input);
 			}
 			startingState.OnExit(input, transition.DestinationState);
-			return transition.DestinationState.Value.OnEntry(input, out output);
+			return transition.DestinationState.Value.OnEntry(input);
 		}
 
 		public async Task<StepResult<TIn, TOut>> StepAsync(State<TIn, TOut> startingState, TIn input)

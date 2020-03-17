@@ -20,8 +20,9 @@ namespace TinySM
 
 		public TOut Step(TIn input)
 		{
-			CurrentState = Definition.Value.Step(CurrentState.Value, input, out var output);
-			return output;
+			var result = Definition.Value.Step(CurrentState.Value, input);
+			CurrentState = result.State;
+			return result.Output;
 		}
 
 		public async Task<TOut> StepAsync(TIn input)

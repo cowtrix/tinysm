@@ -9,16 +9,22 @@
 			OutputValue = output;
 		}
 
-		public override State<T, T> OnEntry(T input, out T output)
+		public override StepResult<T, T> OnEntry(T input)
 		{
-			output = OutputValue;
-			return this;
+			return new StepResult<T, T>()
+			{
+				Output = OutputValue,
+				State = this,
+			};
 		}
 
-		public override State<T, T> OnReentry(T input, out T output)
+		public override StepResult<T, T> OnReentry(T input)
 		{
-			output = OutputValue;
-			return this;
+			return new StepResult<T, T>()
+			{
+				Output = OutputValue,
+				State = this,
+			};
 		}
 	}
 }

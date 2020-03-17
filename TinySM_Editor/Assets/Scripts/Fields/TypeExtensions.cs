@@ -30,6 +30,19 @@ public static class TypeExtensions
 		}
 	}
 
+	public static IEnumerable<Type> InheritanceHierarchy(this Type root)
+	{
+		yield return root;
+		if (root.BaseType == null)
+		{
+			yield break;
+		}
+		foreach (var childType in InheritanceHierarchy(root.BaseType))
+		{
+			yield return childType;
+		}
+	}
+
 	public static IEnumerable<Type> GetTypes(string hint)
 	{
 		if(string.IsNullOrEmpty(hint))
