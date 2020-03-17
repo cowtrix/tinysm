@@ -1,4 +1,5 @@
-﻿using UnityEngine.UI;
+﻿using TinySM;
+using UnityEngine.UI;
 
 public class LabelField : FieldElement<string>
 {

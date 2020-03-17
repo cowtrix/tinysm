@@ -10,6 +10,8 @@ namespace TinySM
 	public interface IState
 	{
 		Guid GUID { get; }
+		IStateMachineDefinition DefinitionInterface { get; }
+		IEnumerable<ITransition> TransitionInterfaces { get; }
 	}
 
 	public delegate void InputEvent<TIn>(TIn input);
@@ -21,14 +23,17 @@ namespace TinySM
 	/// <typeparam name="TOut"></typeparam>
 	public class State<TIn, TOut> : TrackedObject, IState
 	{
-		public List<Transition<TIn, TOut>> Transitions { get; set; }
+		public virtual List<Transition<TIn, TOut>> Transitions { get; set; }
 		[JsonIgnore]
 		public StateMachineDefinition<TIn, TOut> Definition { get => m_definition; set => m_definition = value; }
+		[JsonIgnore]
+		public IStateMachineDefinition DefinitionInterface => Definition;
+		[JsonIgnore]
+		public IEnumerable<ITransition> TransitionInterfaces => Transitions?.Cast<ITransition>();
 		[JsonIgnore]
 		public InputEvent<TIn> OnEntryEvent;
 		[JsonIgnore]
 		public InputEvent<TIn> OnReentryEvent;
-
 		[JsonProperty]
 		private Reference<StateMachineDefinition<TIn, TOut>> m_definition;
 

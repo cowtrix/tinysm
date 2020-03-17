@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SFB;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ public class UiManager : LevelSingleton<UiManager>
 	public List<GameObject> Fields;
 	private Dictionary<Type, IFieldElement> m_fields;
 
-	public ExportWindow Export;
+	public TextEditorWindow Export;
 
 	private void Awake()
 	{
@@ -28,14 +29,19 @@ public class UiManager : LevelSingleton<UiManager>
 		Handler = new UIHandler<UserMessage, ResponseMessage>(new BotSMDefinition());
 	}
 
-	public void NewState(Vector2 worldPos)
+	public void NewState(Vector2 worldPos, Type t)
 	{
 		var obj = Instantiate(StatePrefab.gameObject);
 		obj.transform.SetParent(GraphContainer);
 		obj.transform.localScale = Vector3.one;
 		obj.transform.position = worldPos;
 		var state = obj.GetComponent<StateElement>();
-		state.Bind((IState)Activator.CreateInstance(Handler.StateTypes.First()));
+		state.Bind((IState)Activator.CreateInstance(t));
+	}
+
+	public void LoadDLL()
+	{
+		var files = StandaloneFileBrowser.OpenFilePanel("Load DLL", "", "dll", true);
 	}
 
 	public IFieldElement GetFieldForType(Type type)
@@ -44,6 +50,8 @@ public class UiManager : LevelSingleton<UiManager>
 		{
 			return field;
 		}
-		return null;
+		var valid = m_fields.Where(kvp => kvp.Key.IsAssignableFrom(type))
+			.OrderByDescending(kvp => kvp.Key.InheritanceHierarchy().Count());
+		return valid.FirstOrDefault().Value; 
 	}
 }

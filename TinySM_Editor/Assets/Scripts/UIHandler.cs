@@ -29,6 +29,7 @@ public class UIHandler<TIn, TOut> : IUIHandler
 		{
 			//typeof(State<,>).MakeGenericType(InputType, OutputType),
 			typeof(BotState),
+			typeof(ProxyState<TIn,TOut>)
 		};
 	}
 }

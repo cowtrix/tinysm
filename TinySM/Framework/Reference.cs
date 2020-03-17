@@ -3,9 +3,14 @@ using System;
 
 namespace TinySM
 {
-	public struct Reference<T> where T : TrackedObject
+	public interface IReference
 	{
-		public Guid GUID;
+		Guid GUID { get; set; }
+	}
+
+	public struct Reference<T> : IReference where T : TrackedObject
+	{
+		public Guid GUID { get; set; }
 		[JsonIgnore]
 		public T Value => TrackedObject.Get<T>(GUID);
 

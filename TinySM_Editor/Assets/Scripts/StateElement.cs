@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ using UnityEngine.UI;
 public class StateElement : MonoBehaviour
 {
 	public EntryNode EntryNode;
+	public ExitNode ExitNode;
 	public Guid GUID => State != null ? State.GUID : default;
 
 	public IState State;
@@ -18,7 +20,10 @@ public class StateElement : MonoBehaviour
 	public void Delete()
 	{
 		PromptWindow.LevelInstance.Prompt("Delete this State?", new[] {
-			("Delete", () => Destroy(gameObject)),
+			("Delete", () => {
+				Destroy(gameObject);
+				State.DefinitionInterface.RemoveState(State);
+			}),
 			("Cancel", default(Action))
 		});
 	}
@@ -28,10 +33,24 @@ public class StateElement : MonoBehaviour
 		State = obj;
 		UiManager.LevelInstance.Handler.DefinitionInterface.AddState(obj);
 		BindObject(obj, transform);
+
+		if(State.TransitionInterfaces == null)
+		{
+			// State cannot have exit transitions
+			ExitNode.gameObject.SetActive(false);
+		}
 	}
 
 	public bool ShouldDisplay(MemberInfo info)
 	{
+		if(info.GetCustomAttribute<JsonIgnoreAttribute>() != null)
+		{
+			return false;
+		}
+		if (info.Name == "Name" && info.DeclaringType == typeof(TrackedObject))
+		{
+			return true;
+		}
 		var hierarchy = info.DeclaringType.InheritanceHierarchy();
 		bool first = true;
 		foreach (var type in hierarchy)
@@ -55,6 +74,11 @@ public class StateElement : MonoBehaviour
 
 	private void BindObject(object obj, Transform container)
 	{
+		if(obj == null)
+		{
+			Debug.LogError($"Object was null");
+			return;
+		}
 		var type = obj.GetType();
 		var members = type.GetMembers().Where(m => m is PropertyInfo || m is FieldInfo);
 		Debug.Log($"Gathered members from {type}:\n{string.Join("\n", members.Select(m => $"{m.Name}:{m.DeclaringType}"))}");

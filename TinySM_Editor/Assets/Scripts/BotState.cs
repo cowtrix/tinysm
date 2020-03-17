@@ -14,7 +14,6 @@ public class ResponseMessage
 
 public class BotState : State<UserMessage, ResponseMessage>
 {
-	public string Name;
 	public ResponseMessage Entry = new ResponseMessage();
 }
 

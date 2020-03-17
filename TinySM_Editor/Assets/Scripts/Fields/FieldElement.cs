@@ -29,6 +29,7 @@ public abstract class FieldElement<T> : MonoBehaviour, IFieldElement<T>
 	public UnityEvent OnValueChanged;
 	public Text Label;
 	public Image StateImage;
+	public Color BaseColor = Color.white;
 
 	private MemberInfo m_memberInfo;
 	private object m_context;
@@ -51,6 +52,7 @@ public abstract class FieldElement<T> : MonoBehaviour, IFieldElement<T>
 				StateImage.color = UiManager.LevelInstance.Skin.BadColor;
 				break;
 		}
+		StateImage.color *= BaseColor;
 	}
 
 	public virtual void Bind(MemberInfo member, object context)
@@ -93,6 +95,6 @@ public abstract class FieldElement<T> : MonoBehaviour, IFieldElement<T>
 		get { return Value; }
 		set { Value = (T)value; }
 	}
-	public Type Type => typeof(T);
+	public Type Type => m_memberInfo == null ? typeof(T) : m_memberInfo.GetMemberType();
 	public GameObject GameObject => gameObject;
 }

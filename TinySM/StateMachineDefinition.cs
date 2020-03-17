@@ -17,6 +17,7 @@ namespace TinySM
 		Guid GUID { get; }
 		IEnumerable<IState> StateInterfaces { get; }
 		IState AddState(IState obj);
+		void RemoveState(IState state);
 	}
 
 	public class StateMachineDefinition<TIn, TOut> : TrackedObject, IStateMachineDefinition
@@ -99,6 +100,11 @@ namespace TinySM
 		public StateMachine<TIn, TOut> CreateStateMachine()
 		{
 			return new StateMachine<TIn, TOut>(this);
+		}
+
+		public void RemoveState(IState state)
+		{
+			States = States.Where(s => s.GUID != state.GUID).ToList();
 		}
 	}
 }

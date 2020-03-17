@@ -11,6 +11,7 @@ public class ExitNode : MonoBehaviour
 	public UILineRenderer LineRenderer;
 	public StateElement State;
 	public StateElement NextState;
+	public TransitionNode TransitionNode;
 
 	bool m_isDragging;
 	NicerOutline m_outline;
@@ -59,7 +60,11 @@ public class ExitNode : MonoBehaviour
 				SetColor(UiManager.LevelInstance.Skin.GoodColor);
 			}
 		}
-		
+		TransitionNode.gameObject.SetActive(NextState);
+		if(NextState)
+		{
+			TransitionNode.transform.position = (transform.position + NextState.EntryNode.transform.position) / 2;
+		}
 	}
 
 	void SetColor(Color c)

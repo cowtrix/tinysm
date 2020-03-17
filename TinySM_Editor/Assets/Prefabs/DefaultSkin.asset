@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63ff0d905e99b884a815f63f26799961, type: 3}
   m_Name: DefaultSkin
   m_EditorClassIdentifier: 
-  BadColor: {r: 1, g: 0.48584908, b: 0.48584908, a: 1}
+  BadColor: {r: 1, g: 0, b: 0, a: 1}
   NeutralColor: {r: 1, g: 1, b: 1, a: 1}
-  GoodColor: {r: 0.504717, g: 1, b: 0.56823075, a: 1}
+  GoodColor: {r: 0, g: 1, b: 0.125, a: 1}
