@@ -1,0 +1,1 @@
+xcopy .\TinySM\bin\Release\netstandard2.0\TinySM.dll .\TinySM_Editor\Assets\Plugins\
