@@ -7,6 +7,7 @@ namespace TinySM.Conditions
 	{
 		public Guid GUID { get; set; }
 		public bool Invert { get; set; }
+		public string Name { get; set; }
 
 		public Condition(bool invert)
 		{

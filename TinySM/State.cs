@@ -7,9 +7,8 @@ using TinySM.Conditions;
 
 namespace TinySM
 {
-	public interface IState
+	public interface IState : ITrackedObject
 	{
-		Guid GUID { get; }
 		IStateMachineDefinition DefinitionInterface { get; }
 		IEnumerable<ITransition> TransitionInterfaces { get; }
 	}

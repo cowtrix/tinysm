@@ -4,11 +4,11 @@ using TinySM.Conditions;
 
 namespace TinySM
 {
-	public interface ITransition
+	public interface ITransition : ITrackedObject
 	{
-		Guid GUID { get; }
-		IState Origin { get; set; }
-		IState Desitination { get; set; }
+		IState OriginInterface { get; set; }
+		IState DestinationInterface { get; set; }
+		ICondition ConditionInterface { get; set; }
 	}
 
 
@@ -25,8 +25,10 @@ namespace TinySM
 		public Reference<State<TIn, TOut>> DestinationState { get; set; }
 
 		public ICondition<TIn, TOut> Condition { get; set; }
-		public IState Origin { get => OriginState.Value; set => OriginState = (State<TIn, TOut>)value; }
-		public IState Desitination { get => DestinationState.Value; set => DestinationState = (State<TIn, TOut>)value; }
+		
+		public ICondition ConditionInterface { get => Condition; set => Condition = value as Condition<TIn, TOut>; }
+		public IState OriginInterface { get => OriginState.Value; set => OriginState = (State<TIn, TOut>)value; }
+		public IState DestinationInterface { get => DestinationState.Value; set => DestinationState = (State<TIn, TOut>)value; }
 
 		public Transition() { }
 
@@ -35,6 +37,15 @@ namespace TinySM
 			OriginState = origin;
 			DestinationState = destination;
 			Condition = condition;
+		}
+
+		public override string ToString()
+		{
+			if(Condition == null)
+			{
+				return "Null";
+			}
+			return Condition.ToString();
 		}
 	}
 }

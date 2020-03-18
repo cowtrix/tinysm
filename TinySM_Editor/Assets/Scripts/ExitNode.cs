@@ -7,12 +7,13 @@ using UnityEngine.UI.Extensions;
 
 public class ExitNode : MonoBehaviour
 {
-	public Vector2 LineOffset;
-	public UILineRenderer LineRenderer;
 	public StateElement State;
 	public StateElement NextState;
-	public TransitionNode TransitionNode;
 
+	public GameObject TransitionPrefab;
+	public List<TransitionElement> TransitionNodes = new List<TransitionElement>();
+
+	private TransitionElement m_tempTransition;
 	bool m_isDragging;
 	NicerOutline m_outline;
 
@@ -20,6 +21,21 @@ public class ExitNode : MonoBehaviour
 	{
 		m_outline = gameObject.GetComponent<NicerOutline>();
 		m_outline.enabled = false;
+	}
+
+	public void OnDragStart(BaseEventData data)
+	{
+		var pointerData = data as PointerEventData;
+		if (m_tempTransition != null)
+		{
+			Destroy(m_tempTransition.gameObject);
+		}
+		m_tempTransition = Instantiate(TransitionPrefab).GetComponent<TransitionElement>();
+		m_tempTransition.transform.SetParent(transform);
+		m_tempTransition.transform.localPosition = Vector3.zero;
+		m_tempTransition.transform.localScale = Vector3.one;
+		m_tempTransition.gameObject.SetActive(true);
+		m_tempTransition.SetData(State, null, null);
 	}
 
 	public void OnDrag(BaseEventData data)
@@ -30,61 +46,16 @@ public class ExitNode : MonoBehaviour
 		{
 			NextState = null;
 		}
-		m_isDragging = true;
-		SetLine(pointerData.position);
-		LineRenderer.SetAllDirty();
-	}
-
-	private void Update()
-	{
 		if(NextState)
-			SetLine((Vector2)NextState.EntryNode.transform.position - LineOffset);
-		else if(!m_isDragging && LineRenderer.Points.Any())
-		{
-			LineRenderer.Points = new Vector2[0]; 
-		}
-		m_outline.enabled = m_isDragging;
-
-		if(!m_isDragging)
-		{
-			SetColor(UiManager.LevelInstance.Skin.NeutralColor);
+		{ 
+			m_tempTransition.SetColor(UiManager.LevelInstance.Skin.GoodColor);
 		}
 		else
 		{
-			if(NextState == null)
-			{
-				SetColor(UiManager.LevelInstance.Skin.BadColor);
-			}
-			else
-			{
-				SetColor(UiManager.LevelInstance.Skin.GoodColor);
-			}
+			m_tempTransition.SetColor(UiManager.LevelInstance.Skin.BadColor);
 		}
-		TransitionNode.gameObject.SetActive(NextState);
-		if(NextState)
-		{
-			TransitionNode.transform.position = (transform.position + NextState.EntryNode.transform.position) / 2;
-		}
-	}
-
-	void SetColor(Color c)
-	{
-		m_outline.effectColor = c;
-		LineRenderer.color = c;
-	}
-
-	void SetLine(Vector3 worldDest)
-	{
-		var origin = LineOffset + (Vector2)transform.InverseTransformPoint(LineRenderer.transform.position);
-		var destination = (Vector2)transform.InverseTransformPoint(worldDest);
-		var halfpoint = (origin + destination) / 2;
-		LineRenderer.Points = new Vector2[]
-		{
-			origin,
-			new Vector2(halfpoint.x, origin.y),
-			new Vector2(halfpoint.x, destination.y),
-			destination
-		};
+		m_isDragging = true;
+		m_tempTransition.SetLine(pointerData.position);
 	}
 
 	public void EndDrag(BaseEventData data)
@@ -95,8 +66,8 @@ public class ExitNode : MonoBehaviour
 		if (node == null)
 		{
 			NextState = null;
-			LineRenderer.Points = new Vector2[0];
-			LineRenderer.SetAllDirty();
+			Destroy(m_tempTransition.gameObject);
+			m_tempTransition = null;
 			return;
 		}
 		NextState = node.State;
@@ -104,5 +75,8 @@ public class ExitNode : MonoBehaviour
 		{
 			NextState = null;
 		}
+		TransitionNodes.Add(m_tempTransition);
+		m_tempTransition.SetData(State, node, UiManager.LevelInstance.Handler.DefaultTransition);
+		m_tempTransition = null;
 	}
 }

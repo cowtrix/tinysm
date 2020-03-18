@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TinySM;
+using TinySM.Conditions;
 
 public interface IUIHandler
 {
@@ -8,6 +9,7 @@ public interface IUIHandler
 	Type OutputType { get; }
 	IStateMachineDefinition DefinitionInterface { get; }
 	IEnumerable<Type> StateTypes { get; }
+	ITransition DefaultTransition { get; }
 }
 
 public class UIHandler<TIn, TOut> : IUIHandler
@@ -21,6 +23,8 @@ public class UIHandler<TIn, TOut> : IUIHandler
 	public IStateMachineDefinition DefinitionInterface => StateMachineDefinition;
 
 	public IEnumerable<Type> StateTypes { get; private set; }
+
+	public ITransition DefaultTransition => new Transition<TIn, TOut>();
 
 	public UIHandler(StateMachineDefinition<TIn, TOut> definition)
 	{

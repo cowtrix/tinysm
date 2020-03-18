@@ -81,7 +81,7 @@ public class StateElement : MonoBehaviour
 		}
 		var type = obj.GetType();
 		var members = type.GetMembers().Where(m => m is PropertyInfo || m is FieldInfo);
-		Debug.Log($"Gathered members from {type}:\n{string.Join("\n", members.Select(m => $"{m.Name}:{m.DeclaringType}"))}");
+		//Debug.Log($"Gathered members from {type}:\n{string.Join("\n", members.Select(m => $"{m.Name}:{m.DeclaringType}"))}");
 		foreach (var member in members)
 		{
 			var memberType = member.GetMemberType();
@@ -90,7 +90,7 @@ public class StateElement : MonoBehaviour
 				//Debug.Log($"Skipping member {member.Name}({memberType})");
 				continue;
 			}
-			Debug.Log($"Processing member {member.Name}({memberType})");
+			//Debug.Log($"Processing member {member.Name}({memberType})");
 			var fieldPrefab = UiManager.LevelInstance.GetFieldForType(member.GetMemberType());
 			if (fieldPrefab == null)
 			{

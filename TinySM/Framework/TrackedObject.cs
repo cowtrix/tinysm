@@ -6,7 +6,13 @@ using System.Runtime.Serialization;
 
 namespace TinySM
 {
-	public abstract class TrackedObject
+	public interface ITrackedObject
+	{
+		Guid GUID { get; }
+		string Name { get; }
+	}
+
+	public abstract class TrackedObject : ITrackedObject
 	{
 		private static Dictionary<Guid, TrackedObject> m_map = new Dictionary<Guid, TrackedObject>();
 
