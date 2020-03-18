@@ -26,8 +26,11 @@ namespace TinySM
 
 		public ICondition<TIn, TOut> Condition { get; set; }
 		
+		[JsonIgnore]
 		public ICondition ConditionInterface { get => Condition; set => Condition = value as Condition<TIn, TOut>; }
+		[JsonIgnore]
 		public IState OriginInterface { get => OriginState.Value; set => OriginState = (State<TIn, TOut>)value; }
+		[JsonIgnore]
 		public IState DestinationInterface { get => DestinationState.Value; set => DestinationState = (State<TIn, TOut>)value; }
 
 		public Transition() { }
