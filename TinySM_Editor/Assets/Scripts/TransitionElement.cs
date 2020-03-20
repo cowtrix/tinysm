@@ -42,7 +42,7 @@ public class TransitionElement : MonoBehaviour
 		if (m_destination != null)
 		{
 			SetLine(m_destination.transform.position);
-			SetColor(UiManager.LevelInstance.Skin.NeutralColor);
+			SetColor(UiReferenceTracker.LevelInstance.Skin.NeutralColor);
 		}
 	}
 

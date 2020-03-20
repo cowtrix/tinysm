@@ -96,7 +96,7 @@ public class StateElement : MonoBehaviour
 			{
 				if(!memberType.IsPrimitive)
 				{
-					var group = Instantiate(UiManager.LevelInstance.StateDivider);
+					var group = Instantiate(UiReferenceTracker.LevelInstance.StateDivider);
 					group.transform.SetParent(container);
 					group.transform.localScale = Vector3.one;
 					group.transform.SetAsLastSibling();

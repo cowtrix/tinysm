@@ -48,11 +48,11 @@ public class ExitNode : MonoBehaviour
 		}
 		if(NextState)
 		{ 
-			m_tempTransition.SetColor(UiManager.LevelInstance.Skin.GoodColor);
+			m_tempTransition.SetColor(UiReferenceTracker.LevelInstance.Skin.GoodColor);
 		}
 		else
 		{
-			m_tempTransition.SetColor(UiManager.LevelInstance.Skin.BadColor);
+			m_tempTransition.SetColor(UiReferenceTracker.LevelInstance.Skin.BadColor);
 		}
 		m_isDragging = true;
 		m_tempTransition.SetLine(pointerData.position);

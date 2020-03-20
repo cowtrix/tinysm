@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TinySM;
 using TinySM.Conditions;
+using UnityEngine;
 
 public interface IUIHandler
 {
@@ -10,9 +11,10 @@ public interface IUIHandler
 	IStateMachineDefinition DefinitionInterface { get; }
 	IEnumerable<Type> StateTypes { get; }
 	ITransition DefaultTransition { get; }
+	void TryAddType(Type type);
 }
 
-public class UIHandler<TIn, TOut> : IUIHandler
+public class TinySMEditorFile<TIn, TOut> : IUIHandler
 {
 	public StateMachineDefinition<TIn, TOut> StateMachineDefinition;
 
@@ -23,17 +25,25 @@ public class UIHandler<TIn, TOut> : IUIHandler
 	public IStateMachineDefinition DefinitionInterface => StateMachineDefinition;
 
 	public IEnumerable<Type> StateTypes { get; private set; }
+	private List<Type> __stateTypes = new List<Type>();
 
 	public ITransition DefaultTransition => new Transition<TIn, TOut>();
 
-	public UIHandler(StateMachineDefinition<TIn, TOut> definition)
+	public TinySMEditorFile(StateMachineDefinition<TIn, TOut> definition)
 	{
 		StateMachineDefinition = definition;
-		StateTypes = new[]
+		__stateTypes = new List<Type>
 		{
-			//typeof(State<,>).MakeGenericType(InputType, OutputType),
-			typeof(BotState),
 			typeof(ProxyState<TIn,TOut>)
 		};
+	}
+
+	public void TryAddType(Type type)
+	{
+		if(typeof(State<TIn, TOut>).IsAssignableFrom(type))
+		{
+			Debug.Log($"Loaded new State {type}");
+			__stateTypes.Add(type);
+		}
 	}
 }

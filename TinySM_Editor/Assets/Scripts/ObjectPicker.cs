@@ -5,7 +5,7 @@ using TinySM;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TrackedObjectPicker : LevelSingleton<TrackedObjectPicker>
+public class ObjectPicker : LevelSingleton<ObjectPicker>
 {
     public GameObject RowPrefab;
     public RectTransform Content;
@@ -16,11 +16,6 @@ public class TrackedObjectPicker : LevelSingleton<TrackedObjectPicker>
         gameObject.SetActive(false);
     }
 
-    public void Pick<T>(Action<TrackedObject> onSelect) where T: TrackedObject
-    {
-        Pick(typeof(T), onSelect);
-    }
-
     public void Pick(Type type, Action<TrackedObject> onSelect)
     {
         if(!typeof(TrackedObject).IsAssignableFrom(type))
@@ -28,11 +23,16 @@ public class TrackedObjectPicker : LevelSingleton<TrackedObjectPicker>
             throw new Exception("Invalid type " + type);
         }
         Debug.Log("Picking " + type);
+        var allObjects = TrackedObject.GetAll(type ?? typeof(TrackedObject));
+        Pick(allObjects, onSelect);
+    }
+
+    public void Pick<T>(IEnumerable<T> options, Action<T> onSelect)
+    {
         gameObject.SetActive(true);
         m_buttons.ForEach(b => Destroy(b?.gameObject));
         m_buttons.Clear();
-        var allObjects = TrackedObject.GetAll(type ?? typeof(TrackedObject));
-        foreach(var obj in allObjects)
+        foreach (var obj in options)
         {
             var newButton = Instantiate(RowPrefab).GetComponent<Button>();
             newButton.transform.SetParent(Content);
@@ -41,7 +41,7 @@ public class TrackedObjectPicker : LevelSingleton<TrackedObjectPicker>
                 gameObject.SetActive(false);
                 onSelect(obj);
             });
-            newButton.GetComponentInChildren<Text>().text = obj.Name;
+            newButton.GetComponentInChildren<Text>().text = obj.ToString();
             m_buttons.Add(newButton);
         }
     }

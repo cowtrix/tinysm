@@ -34,7 +34,7 @@ public class ReferenceField : FieldElement<IReference>
 
 	public void OpenPicker()
 	{
-		TrackedObjectPicker.LevelInstance.Pick(Type.GetGenericArguments().Single(), obj => Value = (IReference)Activator.CreateInstance(Type, obj));
+		ObjectPicker.LevelInstance.Pick(Type.GetGenericArguments().Single(), obj => Value = (IReference)Activator.CreateInstance(Type, obj));
 	}
 
 }

@@ -259,8 +259,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ExpandedText: "\u25BC"
   CollapsedText: "\u25C0"
-  Toolbar: {fileID: 3153152033577885121}
+  IgnoredChildren:
+  - {fileID: 3153152033577885121}
   ExpandCollapseToggle: {fileID: 6043841036782026310}
+  ToggleText: {fileID: 858177597042524369}
 --- !u!1 &6983194874461410904
 GameObject:
   m_ObjectHideFlags: 0

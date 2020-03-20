@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -21,21 +22,26 @@ public class PromptWindow : LevelSingleton<PromptWindow>
 		gameObject.SetActive(false);
 	}
 
-	public void Prompt(string text, IEnumerable<ValueTuple<string, Action>> options)
+	public void Prompt(string text, IEnumerable<ValueTuple<string, Action>> options = null)
 	{
 		if (m_currentPrompt != null)
 		{
 			Debug.LogError("Prompt was already in progress");
 			return;
 		}
-
 		gameObject.SetActive(true);
 		StartCoroutine(PromptInternal(text, options));
-
 	}
 
 	IEnumerator PromptInternal(string text, IEnumerable<ValueTuple<string, Action>> options)
 	{
+		if(options == null || !options.Any())
+		{
+			options = new ValueTuple<string, Action>[]
+			{
+				("OK", null)
+			};
+		}
 		Debug.Log("Prompting");
 		Text.text = text;
 		for (int i = 0; i < m_options.Count; i++)

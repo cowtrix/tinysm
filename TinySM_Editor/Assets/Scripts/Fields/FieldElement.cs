@@ -43,13 +43,13 @@ public abstract class FieldElement<T> : MonoBehaviour, IFieldElement<T>
 		switch (State)
 		{
 			case EValidState.None:
-				StateImage.color = UiManager.LevelInstance.Skin.NeutralColor;
+				StateImage.color = UiReferenceTracker.LevelInstance.Skin.NeutralColor;
 				break;
 			case EValidState.Valid:
-				StateImage.color = UiManager.LevelInstance.Skin.GoodColor;
+				StateImage.color = UiReferenceTracker.LevelInstance.Skin.GoodColor;
 				break;
 			case EValidState.Invalid:
-				StateImage.color = UiManager.LevelInstance.Skin.BadColor;
+				StateImage.color = UiReferenceTracker.LevelInstance.Skin.BadColor;
 				break;
 		}
 		StateImage.color *= BaseColor;

@@ -9,13 +9,12 @@ public class StateContainer : MonoBehaviour
 {
 	public string ExpandedText = "▼";
 	public string CollapsedText = "◀";
-	public RectTransform Toolbar;
+	public RectTransform[] IgnoredChildren;
 	public Toggle ExpandCollapseToggle;
-	private Text m_toggleText;
+	public Text ToggleText;
 
 	private void Awake()
 	{
-		m_toggleText = ExpandCollapseToggle.GetComponentInChildren<Text>();
 		ExpandCollapseToggle.onValueChanged.AddListener(ExpandCollapse);
 	}
 
@@ -23,7 +22,7 @@ public class StateContainer : MonoBehaviour
 	{
 		foreach (Transform child in transform)
 		{
-			if (child == Toolbar)
+			if (IgnoredChildren.Contains(child))
 			{
 				continue;
 			}
@@ -33,6 +32,6 @@ public class StateContainer : MonoBehaviour
 
 	private void Update()
 	{
-		m_toggleText.text = ExpandCollapseToggle.isOn ? ExpandedText : CollapsedText;
+		ToggleText.text = ExpandCollapseToggle.isOn ? ExpandedText : CollapsedText;
 	}
 }
