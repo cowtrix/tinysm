@@ -76,7 +76,7 @@ public class ExitNode : MonoBehaviour
 			NextState = null;
 		}
 		TransitionNodes.Add(m_tempTransition);
-		m_tempTransition.SetData(State, node, UiManager.LevelInstance.Handler.DefaultTransition);
+		m_tempTransition.SetData(State, node, UiManager.LevelInstance.CurrentFile.DefaultTransition());
 		m_tempTransition = null;
 	}
 }

@@ -15,5 +15,6 @@ MonoBehaviour:
   BadColor: {r: 1, g: 0, b: 0, a: 1}
   NeutralColor: {r: 1, g: 1, b: 1, a: 1}
   GoodColor: {r: 0, g: 1, b: 0.125, a: 1}
-  StateColor: {r: 1, g: 0.8832984, b: 0.21226418, a: 1}
-  StateMachineDefinitionColor: {r: 0.6886792, g: 0.15917587, b: 0.58529997, a: 1}
+  StateColor: {r: 0.5529412, g: 0.5056025, b: 0.24384706, a: 1}
+  StateMachineDefinitionColor: {r: 0.517, g: 0.25262502, b: 0.46412507, a: 1}
+  ConditionColor: {r: 0.2523585, g: 0.43955764, b: 0.5, a: 1}

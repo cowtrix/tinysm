@@ -13,19 +13,6 @@ public class TextEditorWindow : LevelSingleton<TextEditorWindow>
         gameObject.SetActive(false);
     }
 
-    public void Export()
-    {
-        Field.onEndEdit.RemoveAllListeners();
-        Field.text = JsonConvert.SerializeObject(UiManager.LevelInstance.Handler.DefinitionInterface,
-            new JsonSerializerSettings 
-            { 
-                Formatting = Formatting.Indented,
-                TypeNameHandling = TypeNameHandling.Auto
-            });
-        Field.readOnly = true;
-        gameObject.SetActive(true);
-    }
-
     public void Edit(InputField field)
     {
         Field.readOnly = false;

@@ -11,11 +11,11 @@ public class AssemblyDisplay : MonoBehaviour
     public Text AssemblyName;
     public GameObject TypeDisplay;
     public Toggle Toggle;
-    public UiManager.AssemblyData AssemblyData;
+    public AssemblyData AssemblyData;
 
     private List<GameObject> m_types = new List<GameObject>();
 
-    public void SetData(UiManager.AssemblyData assembly)
+    public void SetData(AssemblyData assembly)
     {
         AssemblyData = assembly;
         AssemblyName.text = $"{AssemblyData.Assembly.GetName().Name} [{AssemblyData.Types.Count}]";

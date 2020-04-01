@@ -1,7 +1,9 @@
-﻿using SFB;
+﻿using Newtonsoft.Json;
+using SFB;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using TinySM;
@@ -19,6 +21,7 @@ public class UiManager : LevelSingleton<UiManager>
 
 	[Serializable]
 	public class UiStateEvent : UnityEvent<EState> { }
+
 	[Serializable]
 	public class StateUIDefinition
 	{
@@ -26,18 +29,8 @@ public class UiManager : LevelSingleton<UiManager>
 		public List<RectTransform> Enabled;
 		public List<RectTransform> Disabled;
 	}
-	public class AssemblyData
-	{
-		public Assembly Assembly;
-		public List<Type> Types = new List<Type>();
-		public AssemblyData(Assembly assembly)
-		{
-			Assembly = assembly;
-		}
-	}
-	public Action<Assembly> OnAssemblyLoaded;
-	public List<AssemblyData> LoadedAssemblies = new List<AssemblyData>();
-	public IUIHandler Handler;
+
+	public EditorFile CurrentFile;
 	private Dictionary<Type, IFieldElement> m_fields;
 	public List<StateUIDefinition> StateUIDefinitions;
 	public UiStateEvent OnStateChanged;
@@ -81,14 +74,46 @@ public class UiManager : LevelSingleton<UiManager>
 			config.Disabled.ForEach(r => r.gameObject.SetActive(false));
 		});
 		State = EState.Menu;
+		Toolbar.LevelInstance.Add("New", () => CurrentFile = new EditorFile());
+		Toolbar.LevelInstance.Add("Open", LoadFile);
+		Toolbar.LevelInstance.Add("Save", SaveFile, () => CurrentFile != null);
 	}
 
-	public List<Type> GetStateTypes()
+	private void LoadFile()
+	{
+		var file = StandaloneFileBrowser.OpenFilePanel("Load Editor File", "", "tse", false).SingleOrDefault();
+		if(!File.Exists(file))
+		{
+			return;
+		}
+		CurrentFile = JsonConvert.DeserializeObject<EditorFile>(File.ReadAllText(file), new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto, Formatting = Formatting.Indented });
+	}
+
+	private void SaveFile()
+	{
+		if(CurrentFile == null)
+		{
+			Debug.LogError("Tried to save a null handler");
+			return;
+		}
+		var file = StandaloneFileBrowser.SaveFilePanel("Save Editor File", "", "untitled", "tse");
+		if(string.IsNullOrEmpty(file))
+		{
+			return;
+		}
+		File.WriteAllText(file, JsonConvert.SerializeObject(CurrentFile, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto, Formatting = Formatting.Indented }));
+		if(!File.Exists(file))
+		{
+			PromptWindow.LevelInstance.Prompt($"Failed to save file to {file}");
+		}
+	}
+
+	public List<Type> GetTypes<T>() where T: ITrackedObject
 	{
 		var result = new List<Type>();
-		if(Handler != null)
+		if(CurrentFile != null)
 		{
-			result.AddRange(Handler.StateTypes);
+			result.AddRange(CurrentFile.GetTypes<T>());
 		}
 		return result;
 	}
@@ -103,34 +128,12 @@ public class UiManager : LevelSingleton<UiManager>
 		state.Bind((IState)Activator.CreateInstance(t));
 	}
 
-	public void LoadDLL()
+	public void LoadDLLFromFile()
 	{
 		var files = StandaloneFileBrowser.OpenFilePanel("Load DLL", "", "dll", true);
 		foreach(var file in files)
 		{
-			var newAss = Assembly.LoadFile(file);
-			var data = new AssemblyData(newAss);
-			LoadedAssemblies.Add(data);
-			Debug.Log($"Loaded {newAss.FullName}");
-			var types = newAss.GetTypes();
-			foreach(var type in types)
-			{
-				if(!typeof(ITrackedObject).IsAssignableFrom(type) || type.IsInterface || type.IsAbstract)
-				{
-					continue;
-				}
-				if(type.IsValueType)
-				{
-					PromptWindow.LevelInstance.Prompt($"Could not load type {type} as it was a struct");
-				}
-				Debug.Log("Discovered tracked type " + type);
-				if(Handler != null)
-				{
-					Handler.TryAddType(type);
-				}
-				data.Types.Add(type);
-			}
-			OnAssemblyLoaded?.Invoke(newAss);
+			CurrentFile.LoadDLL(file);
 		}
 	}
 
@@ -143,5 +146,19 @@ public class UiManager : LevelSingleton<UiManager>
 		var valid = m_fields.Where(kvp => kvp.Key.IsAssignableFrom(type))
 			.OrderByDescending(kvp => kvp.Key.InheritanceHierarchy().Count());
 		return valid.FirstOrDefault().Value; 
+	}
+
+	public void NewStateMachine()
+	{
+		/*ObjectPicker.LevelInstance.Pick(GetTypes<IStateMachineDefinition>(),
+			t =>
+			{
+				var typeHierarchy = t.InheritanceHierarchy().ToList();
+				var lastGeneric = typeHierarchy.Last(lastGen => lastGen.IsConstructedGenericType);
+				var handlerType = typeof(EditorFile<,>).MakeGenericType(lastGeneric.GetGenericArguments());
+				CurrentFile = (IEditorFile)Activator.CreateInstance(handlerType);
+				CurrentFile.DefinitionInterface = (IStateMachineDefinition)Activator.CreateInstance(t);
+				State = EState.EditSM;
+			});*/
 	}
 }

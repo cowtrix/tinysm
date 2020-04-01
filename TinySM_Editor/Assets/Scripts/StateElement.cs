@@ -31,7 +31,7 @@ public class StateElement : MonoBehaviour
 	public void Bind(IState obj)
 	{
 		State = obj;
-		UiManager.LevelInstance.Handler.DefinitionInterface.AddState(obj);
+		UiManager.LevelInstance.CurrentFile.StateMachineDefinition.AddState(obj);
 		BindObject(obj, transform);
 
 		if(State.TransitionInterfaces == null)

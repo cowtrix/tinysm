@@ -12,9 +12,8 @@ namespace TinySM
 		public TOut Output;
 	}
 
-	public interface IStateMachineDefinition
+	public interface IStateMachineDefinition : ITrackedObject
 	{
-		Guid GUID { get; }
 		IEnumerable<IState> StateInterfaces { get; }
 		IState AddState(IState obj);
 		void RemoveState(IState state);

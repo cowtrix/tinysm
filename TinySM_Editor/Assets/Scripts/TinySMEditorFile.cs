@@ -1,49 +1,40 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using TinySM;
 using TinySM.Conditions;
 using UnityEngine;
 
-public interface IUIHandler
+public class EditorFile
 {
-	Type InputType { get; }
-	Type OutputType { get; }
-	IStateMachineDefinition DefinitionInterface { get; }
-	IEnumerable<Type> StateTypes { get; }
-	ITransition DefaultTransition { get; }
-	void TryAddType(Type type);
-}
+	public IStateMachineDefinition StateMachineDefinition { get; set; }
+	public List<AssemblyData> LoadedAssemblies { get; set; }
+	[JsonIgnore]
+	public Action<AssemblyData> OnAssemblyLoaded { get; set; }
 
-public class TinySMEditorFile<TIn, TOut> : IUIHandler
-{
-	public StateMachineDefinition<TIn, TOut> StateMachineDefinition;
-
-	public Type InputType => typeof(TIn);
-
-	public Type OutputType => typeof(TOut);
-
-	public IStateMachineDefinition DefinitionInterface => StateMachineDefinition;
-
-	public IEnumerable<Type> StateTypes { get; private set; }
-	private List<Type> __stateTypes = new List<Type>();
-
-	public ITransition DefaultTransition => new Transition<TIn, TOut>();
-
-	public TinySMEditorFile(StateMachineDefinition<TIn, TOut> definition)
+	public EditorFile()
 	{
-		StateMachineDefinition = definition;
-		__stateTypes = new List<Type>
-		{
-			typeof(ProxyState<TIn,TOut>)
-		};
+		LoadedAssemblies = new List<AssemblyData>();
 	}
 
-	public void TryAddType(Type type)
+	public void LoadDLL(string assemblyPath)
 	{
-		if(typeof(State<TIn, TOut>).IsAssignableFrom(type))
-		{
-			Debug.Log($"Loaded new State {type}");
-			__stateTypes.Add(type);
-		}
+		var data = new AssemblyData(assemblyPath);
+		LoadedAssemblies.Add(data);
+		Debug.Log($"Loaded {data.Assembly.FullName}");
+		OnAssemblyLoaded?.Invoke(data);
+	}
+
+	public IEnumerable<Type> GetTypes<T>()
+	{
+		return LoadedAssemblies.SelectMany(ass => ass.Types)
+			.Where(t => typeof(T).IsAssignableFrom(t)).ToList();
+	}
+
+	internal ITransition DefaultTransition()
+	{
+		return Activator.CreateInstance(typeof(Transition<,>).MakeGenericType(StateMachineDefinition.GetType().GetGenericTypeDefinition())) as ITransition;
 	}
 }

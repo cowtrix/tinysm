@@ -13,20 +13,20 @@ public class DllMenu : MonoBehaviour
 	private void Awake()
 	{
 		gameObject.SetActive(false);
-		Toolbar.LevelInstance.Add("Manage DLLs", Open, true);
+		Toolbar.LevelInstance.Add("Manage DLLs", Open, () => UiManager.LevelInstance.CurrentFile != null, true);
 	}
 
 	public void Open()
 	{
 		gameObject.SetActive(true);
 		RefreshList();
-		UiManager.LevelInstance.OnAssemblyLoaded += a => RefreshList();
+		UiManager.LevelInstance.CurrentFile.OnAssemblyLoaded += a => RefreshList();
 	}
 
 	public void RefreshList()
 	{
 		HashSet<AssemblyDisplay> dirty = new HashSet<AssemblyDisplay>();
-		foreach (var ass in UiManager.LevelInstance.LoadedAssemblies)
+		foreach (var ass in UiManager.LevelInstance.CurrentFile.LoadedAssemblies)
 		{
 			var disp = m_displays.SingleOrDefault(a => a.AssemblyData.Assembly == ass.Assembly);
 			if(disp == null)
