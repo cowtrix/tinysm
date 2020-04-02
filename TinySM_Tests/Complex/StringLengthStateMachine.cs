@@ -27,14 +27,14 @@ namespace Complex
 	[TestClass]
 	public class StringLengthStateMachine : TemplateTestBase<string, int>
 	{
-		protected override void CheckOutput(State<string, int> state, string input, int result)
+		protected override void CheckOutput(IState<string, int> state, string input, int result)
 		{
 			Assert.AreEqual(input.Length, result);
 		}
 
 		protected override string GetInput() => RandomString(32);
 
-		protected override State<string, int> RandomState()
+		protected override IState<string, int> RandomState()
 		{
 			return new StringLengthState();
 		}

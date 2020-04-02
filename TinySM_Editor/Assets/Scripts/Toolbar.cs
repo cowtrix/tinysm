@@ -10,12 +10,11 @@ public class Toolbar : LevelSingleton<Toolbar>
     public RectTransform LeftJustification;
     public RectTransform RightJustification;
 
-    struct ToolbarItem
+    class ToolbarItem
     {
         public Button Button;
         public Func<bool> IsActive;
     }
-
     private Dictionary<string, ToolbarItem> m_items = new Dictionary<string, ToolbarItem>();
 
     public void Clear()
@@ -43,6 +42,27 @@ public class Toolbar : LevelSingleton<Toolbar>
             toolbarItem.Button.transform.SetParent(rightJustify ? RightJustification : LeftJustification);
         }
         toolbarItem.Button.onClick.AddListener(() => action());
+        toolbarItem.Button.GetComponentInChildren<Text>().text = name;
+    }
+
+    public void Add(string name, CustomContextMenu menu, Func<bool> active = null, bool rightJustify = false)
+    {
+        if (m_items.TryGetValue(name, out var toolbarItem))
+        {
+            toolbarItem.Button.onClick.RemoveAllListeners();
+        }
+        else
+        {
+            toolbarItem = new ToolbarItem
+            {
+                Button = Instantiate(UiReferenceTracker.LevelInstance.DefaultButton).GetComponent<Button>(),
+                IsActive = active,
+            };
+            m_items[name] = toolbarItem;
+            toolbarItem.Button.transform.SetParent(rightJustify ? RightJustification : LeftJustification);
+        }
+        toolbarItem.Button.onClick.AddListener(() => 
+            ContextMenuManager.LevelInstance.SetData(toolbarItem.Button.transform.position, menu));
         toolbarItem.Button.GetComponentInChildren<Text>().text = name;
     }
 

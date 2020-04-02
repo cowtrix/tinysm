@@ -35,6 +35,11 @@ public class EditorFile
 
 	internal ITransition DefaultTransition()
 	{
-		return Activator.CreateInstance(typeof(Transition<,>).MakeGenericType(StateMachineDefinition.GetType().GetGenericTypeDefinition())) as ITransition;
+		var genericType = StateMachineDefinition.GetType().InheritanceHierarchy().FirstOrDefault(t => t.GetInterface(IStateMachineDefinition) != null);
+		if(genericType == null)
+		{
+			Debug.LogError($"State machine type {StateMachineDefinition.GetType()} did not contain an IStateMachine");
+		}
+		return Activator.CreateInstance(typeof(Transition<,>).MakeGenericType(.GetGenericTypeDefinition())) as ITransition;
 	}
 }

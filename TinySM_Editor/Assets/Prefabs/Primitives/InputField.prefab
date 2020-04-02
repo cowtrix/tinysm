@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 6356988260971341250}
   - component: {fileID: 6558066637926402047}
   - component: {fileID: 7342304585442366089}
+  - component: {fileID: 5099433711748783235}
   m_Layer: 5
   m_Name: InputField
   m_TagString: Untagged
@@ -267,6 +268,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d773ec2d0929e0f4298011ac74befb35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5099433711748783235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1275953574470271050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b16b73e1b7a795f4f807a263a45e3295, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 10
 --- !u!1 &1972530577009189006
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,6 +292,7 @@ GameObject:
   - component: {fileID: 8759513144701897489}
   - component: {fileID: 1046864580827552682}
   - component: {fileID: 3299457453113481879}
+  - component: {fileID: 2454953501441057451}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -331,7 +346,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 26bce967719197c4c9da8f74d12d3e1a, type: 3}
     m_FontSize: 12
     m_FontStyle: 0
     m_BestFit: 0
@@ -344,6 +359,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
+--- !u!114 &2454953501441057451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1972530577009189006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b16b73e1b7a795f4f807a263a45e3295, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 2
 --- !u!1001 &5168669707454018901
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -351,11 +379,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4629645462975314098}
     m_Modifications:
-    - target: {fileID: 2869025387400877125, guid: 0c3504048650866408467a14e697ee07,
-        type: 3}
-      propertyPath: m_Name
-      value: Edit
-      objectReference: {fileID: 0}
     - target: {fileID: 429410308935912280, guid: 0c3504048650866408467a14e697ee07,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -461,6 +484,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 2869025387400877125, guid: 0c3504048650866408467a14e697ee07,
+        type: 3}
+      propertyPath: m_Name
+      value: Edit
+      objectReference: {fileID: 0}
     - target: {fileID: 5328947182088573697, guid: 0c3504048650866408467a14e697ee07,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -511,6 +539,12 @@ PrefabInstance:
       propertyPath: m_FontData.m_FontStyle
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6601680302725505433, guid: 0c3504048650866408467a14e697ee07,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 26bce967719197c4c9da8f74d12d3e1a,
+        type: 3}
     - target: {fileID: 8548571577107279436, guid: 0c3504048650866408467a14e697ee07,
         type: 3}
       propertyPath: m_Enabled

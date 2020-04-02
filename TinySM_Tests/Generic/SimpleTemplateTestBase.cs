@@ -6,7 +6,7 @@ namespace Simple
 {
 	public abstract class SimpleTemplateTestBase<T> : TemplateTestBase<T, T>
 	{
-		protected override void CheckOutput(State<T, T> state, T input, T result)
+		protected override void CheckOutput(IState<T, T> state, T input, T result)
 		{
 			var simpleState = state as SimpleState<T>;
 			Assert.AreEqual(simpleState.OutputValue, result);
@@ -14,7 +14,7 @@ namespace Simple
 
 		protected abstract SimpleState<T> RandomSimpleState();
 
-		protected override State<T, T> RandomState() => RandomSimpleState();
+		protected override IState<T, T> RandomState() => RandomSimpleState();
 
 		protected override T GetInput() => default;
 	}

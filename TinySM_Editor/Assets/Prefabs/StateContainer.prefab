@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4805065193939275218}
   - component: {fileID: 6852279861862453729}
   - component: {fileID: 135370094148666641}
+  - component: {fileID: 1483022911391282884}
   m_Layer: 5
   m_Name: Seperator
   m_TagString: Untagged
@@ -77,6 +78,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Name
+--- !u!114 &1483022911391282884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3184758906784600417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b16b73e1b7a795f4f807a263a45e3295, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 2
 --- !u!1 &6735535355910783898
 GameObject:
   m_ObjectHideFlags: 0
@@ -277,6 +291,7 @@ GameObject:
   - component: {fileID: 5586186620629493144}
   - component: {fileID: 4853479708278349280}
   - component: {fileID: 971972411648000528}
+  - component: {fileID: 4356472572420007621}
   m_Layer: 5
   m_Name: ContainerLabel
   m_TagString: Untagged
@@ -326,7 +341,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.1509434, g: 0.1509434, b: 0.1509434, a: 1}
+  m_Color: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -390,6 +405,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ScrollSpeed: 1
   Scale: {x: 0.5, y: 1}
+--- !u!114 &4356472572420007621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6983194874461410904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b16b73e1b7a795f4f807a263a45e3295, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 4
 --- !u!1001 &6053925441428870054
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -397,11 +425,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3153152033577885121}
     m_Modifications:
-    - target: {fileID: 5228962303253140649, guid: 12aa1eb7bebc52b468f525bc1b1252cd,
-        type: 3}
-      propertyPath: m_Name
-      value: ExpandCollapseToggle
-      objectReference: {fileID: 0}
     - target: {fileID: 568531605229104608, guid: 12aa1eb7bebc52b468f525bc1b1252cd,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
@@ -542,6 +565,32 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 5228962303253140649, guid: 12aa1eb7bebc52b468f525bc1b1252cd,
+        type: 3}
+      propertyPath: m_Name
+      value: ExpandCollapseToggle
+      objectReference: {fileID: 0}
+    - target: {fileID: 6911625643964388215, guid: 12aa1eb7bebc52b468f525bc1b1252cd,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6911625643964388215, guid: 12aa1eb7bebc52b468f525bc1b1252cd,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6911625643964388215, guid: 12aa1eb7bebc52b468f525bc1b1252cd,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6911625643964388215, guid: 12aa1eb7bebc52b468f525bc1b1252cd,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 26bce967719197c4c9da8f74d12d3e1a,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12aa1eb7bebc52b468f525bc1b1252cd, type: 3}
 --- !u!224 &6483319026328934650 stripped

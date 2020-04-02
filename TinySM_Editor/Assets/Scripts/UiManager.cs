@@ -74,12 +74,29 @@ public class UiManager : LevelSingleton<UiManager>
 			config.Disabled.ForEach(r => r.gameObject.SetActive(false));
 		});
 		State = EState.Menu;
-		Toolbar.LevelInstance.Add("New", () => CurrentFile = new EditorFile());
-		Toolbar.LevelInstance.Add("Open", LoadFile);
-		Toolbar.LevelInstance.Add("Save", SaveFile, () => CurrentFile != null);
+		Toolbar.LevelInstance.Add("File",
+			new CustomContextMenu(new[]
+			{
+				new CustomContextMenu.InvokeItem
+				{
+					Label = "New",
+					Action = _ => NewProject()
+				},
+				new CustomContextMenu.InvokeItem
+				{
+					Label = "Open",
+					Action = _ => OpenProject()
+				},
+				new CustomContextMenu.InvokeItem
+				{
+					Label = "Save",
+					Action = _ => SaveProject()
+				},
+			})
+		);
 	}
 
-	private void LoadFile()
+	public void OpenProject()
 	{
 		var file = StandaloneFileBrowser.OpenFilePanel("Load Editor File", "", "tse", false).SingleOrDefault();
 		if(!File.Exists(file))
@@ -89,7 +106,7 @@ public class UiManager : LevelSingleton<UiManager>
 		CurrentFile = JsonConvert.DeserializeObject<EditorFile>(File.ReadAllText(file), new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto, Formatting = Formatting.Indented });
 	}
 
-	private void SaveFile()
+	public void SaveProject()
 	{
 		if(CurrentFile == null)
 		{
@@ -118,16 +135,6 @@ public class UiManager : LevelSingleton<UiManager>
 		return result;
 	}
 
-	public void NewState(Vector2 worldPos, Type t)
-	{
-		var obj = Instantiate(Refs.StatePrefab.gameObject);
-		obj.transform.SetParent(Refs.GraphContainer);
-		obj.transform.localScale = Vector3.one;
-		obj.transform.position = worldPos;
-		var state = obj.GetComponent<StateElement>();
-		state.Bind((IState)Activator.CreateInstance(t));
-	}
-
 	public void LoadDLLFromFile()
 	{
 		var files = StandaloneFileBrowser.OpenFilePanel("Load DLL", "", "dll", true);
@@ -148,17 +155,18 @@ public class UiManager : LevelSingleton<UiManager>
 		return valid.FirstOrDefault().Value; 
 	}
 
-	public void NewStateMachine()
+	public void NewProject()
 	{
-		/*ObjectPicker.LevelInstance.Pick(GetTypes<IStateMachineDefinition>(),
+		CurrentFile = new EditorFile();
+		State = EState.EditSM;
+		ObjectPicker.LevelInstance.Pick(() => GetTypes<IStateMachineDefinition>(),
 			t =>
 			{
-				var typeHierarchy = t.InheritanceHierarchy().ToList();
-				var lastGeneric = typeHierarchy.Last(lastGen => lastGen.IsConstructedGenericType);
-				var handlerType = typeof(EditorFile<,>).MakeGenericType(lastGeneric.GetGenericArguments());
-				CurrentFile = (IEditorFile)Activator.CreateInstance(handlerType);
-				CurrentFile.DefinitionInterface = (IStateMachineDefinition)Activator.CreateInstance(t);
-				State = EState.EditSM;
-			});*/
+				if(t == null)
+				{
+					NewProject();
+				}
+				CurrentFile.StateMachineDefinition = (IStateMachineDefinition)Activator.CreateInstance(t);
+			});
 	}
 }

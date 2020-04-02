@@ -18,7 +18,7 @@ namespace Test
 			  .Select(s => s[Random.Next(s.Length)]).ToArray());
 		}
 
-		protected abstract State<TIn, TOut> RandomState();
+		protected abstract IState<TIn, TOut> RandomState();
 
 		/// <summary>
 		/// Do a round-trip serialization and check that nothing changes
@@ -133,7 +133,7 @@ namespace Test
 
 		protected abstract TIn GetInput();
 
-		protected abstract void CheckOutput(State<TIn, TOut> state, TIn input, TOut result);
+		protected abstract void CheckOutput(IState<TIn, TOut> state, TIn input, TOut result);
 	}
 
 }

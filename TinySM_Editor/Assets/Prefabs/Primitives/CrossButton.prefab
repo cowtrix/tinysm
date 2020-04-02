@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1105418362414800756}
   - component: {fileID: 6601680302725505433}
   - component: {fileID: 8548571577107279436}
+  - component: {fileID: 6269459757431102399}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -93,6 +94,19 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
   m_EffectDistance: {x: 1, y: -1}
   m_UseGraphicAlpha: 1
+--- !u!114 &6269459757431102399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 869459718337183226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b16b73e1b7a795f4f807a263a45e3295, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 2
 --- !u!1 &2869025387400877125
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,6 +121,7 @@ GameObject:
   - component: {fileID: 5328947182088573697}
   - component: {fileID: 2938745002130529520}
   - component: {fileID: 3119932308194202018}
+  - component: {fileID: 5359050113276081040}
   m_Layer: 5
   m_Name: CrossButton
   m_TagString: Untagged
@@ -155,7 +170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 1}
+  m_Color: {r: 0.1981132, g: 0.1981132, b: 0.1981132, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -248,3 +263,16 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &5359050113276081040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2869025387400877125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b16b73e1b7a795f4f807a263a45e3295, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 9

@@ -15,6 +15,12 @@ public class ContextMenuManager : LevelSingleton<ContextMenuManager>
 
     public void SetData(Vector2 position, CustomContextMenu menu)
     {
+        if(menu == null)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+
         gameObject.SetActive(true);
         transform.position = position;
         m_buttons.ForEach(b => Destroy(b.gameObject));
