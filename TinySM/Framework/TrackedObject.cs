@@ -14,28 +14,28 @@ namespace TinySM
 
 	public abstract class TrackedObject : ITrackedObject
 	{
-		private static Dictionary<Guid, TrackedObject> m_map = new Dictionary<Guid, TrackedObject>();
+		private static Dictionary<Guid, ITrackedObject> m_map = new Dictionary<Guid, ITrackedObject>();
 
 		public virtual string Name { get; set; }
 
-		public static T Get<T>(Guid guid) where T:TrackedObject
+		public static T Get<T>(Guid guid) where T : class, ITrackedObject
 		{
 			m_map.TryGetValue(guid, out var obj);
 			return obj as T;
 		}
 
-		public static IEnumerable<T> GetAll<T>() where T : TrackedObject
+		public static IEnumerable<T> GetAll<T>() where T : ITrackedObject
 		{
 			return m_map.Values.OfType<T>();
 		}
 
-		public static TrackedObject Get(Guid guid)
+		public static ITrackedObject Get(Guid guid)
 		{
 			m_map.TryGetValue(guid, out var obj);
 			return obj;
 		}
 
-		public static IEnumerable<TrackedObject> GetAll(Type type)
+		public static IEnumerable<ITrackedObject> GetAll(Type type)
 		{
 			return m_map.Values.Where(val => type.IsAssignableFrom(val.GetType()));
 		}

@@ -21,7 +21,7 @@ namespace TinySM
 			return State.Value.OnEntryAsync(input);
 		}
 
-		public override void OnExit(Tin input, State<Tin, TOut> next)
+		public override void OnExit(Tin input, IState<Tin, TOut> next)
 		{
 			State.Value.OnExit(input, next);
 		}

@@ -19,12 +19,20 @@ namespace TinySM
 		void RemoveState(IState state);
 	}
 
-	public class StateMachineDefinition<TIn, TOut> : TrackedObject, IStateMachineDefinition
+	public interface IStateMachineDefinition<TIn, TOut> : IStateMachineDefinition
+	{
+		Reference<IState<TIn, TOut>> RootState { get; }
+		List<IState<TIn, TOut>> States { get; }
+		StepResult<TIn, TOut> Step(IState<TIn, TOut> value, TIn input);
+		Task<StepResult<TIn, TOut>> StepAsync(IState<TIn, TOut> startingState, TIn input);
+	}
+
+	public class StateMachineDefinition<TIn, TOut> : TrackedObject, IStateMachineDefinition<TIn, TOut>
 	{
 		[JsonProperty]
-		public List<State<TIn, TOut>> States { get; private set; }
+		public List<IState<TIn, TOut>> States { get; private set; }
 		[JsonProperty]
-		public Reference<State<TIn, TOut>> RootState { get; private set; }
+		public Reference<IState<TIn, TOut>> RootState { get; private set; }
 		[JsonIgnore]
 		public IEnumerable<IState> StateInterfaces => States.Cast<IState>();
 
@@ -33,12 +41,12 @@ namespace TinySM
 		/// </summary>
 		internal StateMachineDefinition() : base() 
 		{
-			States = new List<State<TIn, TOut>>();
+			States = new List<IState<TIn, TOut>>();
 		}
 
-		public StateMachineDefinition(State<TIn, TOut> root = null) : this()
+		public StateMachineDefinition(IState<TIn, TOut> root = null) : this()
 		{
-			RootState = root;
+			RootState = new Reference<IState<TIn, TOut>>(root);
 			AddState(root);
 		}
 
@@ -51,7 +59,7 @@ namespace TinySM
 			return AddState(typedState);
 		}
 
-		public State<TIn, TOut> AddState(State<TIn, TOut> state)
+		public IState<TIn, TOut> AddState(IState<TIn, TOut> state)
 		{
 			if(state == null)
 			{
@@ -65,40 +73,36 @@ namespace TinySM
 			if(RootState.Value == null)
 			{
 				// Set this to be the root state if none exists
-				RootState = state;
+				RootState = new Reference<IState<TIn, TOut>>(state);
 			}
 			state.Definition = this;
 			States.Add(state);
 			return state;
 		}
 
-		public StepResult<TIn, TOut> Step(State<TIn, TOut> startingState, TIn input)
+		public StepResult<TIn, TOut> Step(IState<TIn, TOut> startingState, TIn input)
 		{
 			var transition = startingState.Transitions
-				.FirstOrDefault(t => t.Condition.ShouldTransition(startingState, t.DestinationState, input));
+				.FirstOrDefault(t => t.Condition.ShouldTransition(startingState, t.DestinationState.Value, input));
 			if(transition == null)
 			{
 				return startingState.OnReentry(input);
 			}
-			startingState.OnExit(input, transition.DestinationState);
+			startingState.OnExit(input, transition.DestinationState.Value);
 			return transition.DestinationState.Value.OnEntry(input);
 		}
 
-		public async Task<StepResult<TIn, TOut>> StepAsync(State<TIn, TOut> startingState, TIn input)
+		public async Task<StepResult<TIn, TOut>> StepAsync(IState<TIn, TOut> startingState, TIn input)
 		{
 			var transition = startingState.Transitions
-				.FirstOrDefault(t => t.Condition.ShouldTransition(startingState, t.DestinationState, input));
+				.FirstOrDefault(t => t.Condition.ShouldTransition(startingState, t.DestinationState.Value, input));
 			if (transition == null)
 			{
 				return await startingState.OnReentryAsync(input);
 			}
-			startingState.OnExit(input, transition.DestinationState);
-			return await transition.DestinationState.Value.OnEntryAsync(input);
-		}
-
-		public StateMachine<TIn, TOut> CreateStateMachine()
-		{
-			return new StateMachine<TIn, TOut>(this);
+			var destination = transition.DestinationState.Value;
+			startingState.OnExit(input, destination);
+			return await destination.OnEntryAsync(input);
 		}
 
 		public void RemoveState(IState state)

@@ -15,7 +15,7 @@ namespace TinySM.Conditions
 			Invert = false;
 		}
 
-		public bool ShouldTransition(State<TIn, TOut> origin, State<TIn, TOut> destination, TIn input)
+		public bool ShouldTransition(IState<TIn, TOut> origin, IState<TIn, TOut> destination, TIn input)
 		{
 			var result = ShouldTransitionInternal(origin, destination, input);
 			if(Invert)
@@ -25,6 +25,6 @@ namespace TinySM.Conditions
 			return result;
 		}
 
-		protected abstract bool ShouldTransitionInternal(State<TIn, TOut> origin, State<TIn, TOut> destination, TIn input);
+		protected abstract bool ShouldTransitionInternal(IState<TIn, TOut> origin, IState<TIn, TOut> destination, TIn input);
 	}
 }

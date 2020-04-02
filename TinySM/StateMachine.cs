@@ -8,13 +8,13 @@ namespace TinySM
 {
 	public class StateMachine<TIn, TOut> : TrackedObject
 	{
-		public Reference<StateMachineDefinition<TIn, TOut>> Definition { get; set; }
-		public Reference<State<TIn, TOut>> CurrentState { get; set; }
+		public Reference<IStateMachineDefinition<TIn, TOut>> Definition { get; set; }
+		public Reference<IState<TIn, TOut>> CurrentState { get; set; }
 		public Dictionary<string, object> DataStore = new Dictionary<string, object>();
 
-		public StateMachine(StateMachineDefinition<TIn, TOut> definition) : base()
+		public StateMachine(IStateMachineDefinition<TIn, TOut> definition) : base()
 		{
-			Definition = definition;
+			Definition = new Reference<IStateMachineDefinition<TIn, TOut>>(definition);
 			CurrentState = definition.RootState;
 		}
 

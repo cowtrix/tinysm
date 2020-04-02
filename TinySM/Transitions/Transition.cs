@@ -20,9 +20,9 @@ namespace TinySM
 	/// <typeparam name="TOut"></typeparam>
 	public class Transition<TIn, TOut> : TrackedObject, ITransition
 	{
-		public Reference<State<TIn, TOut>> OriginState { get; set; }
+		public Reference<IState<TIn, TOut>> OriginState { get; set; }
 
-		public Reference<State<TIn, TOut>> DestinationState { get; set; }
+		public Reference<IState<TIn, TOut>> DestinationState { get; set; }
 
 		public ICondition<TIn, TOut> Condition { get; set; }
 		
@@ -35,10 +35,10 @@ namespace TinySM
 
 		public Transition() { }
 
-		public Transition(State<TIn, TOut> origin, State<TIn, TOut> destination, ICondition<TIn, TOut> condition)
+		public Transition(IState<TIn, TOut> origin, IState<TIn, TOut> destination, ICondition<TIn, TOut> condition)
 		{
-			OriginState = origin;
-			DestinationState = destination;
+			OriginState = new Reference<IState<TIn, TOut>>(origin);
+			DestinationState = new Reference<IState<TIn, TOut>>(destination);
 			Condition = condition;
 		}
 

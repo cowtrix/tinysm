@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +12,17 @@ namespace TinySM
 		IEnumerable<ITransition> TransitionInterfaces { get; }
 	}
 
+	public interface IState<TIn, TOut> : IState
+	{
+		IStateMachineDefinition<TIn, TOut> Definition { get; set; }
+		List<Transition<TIn, TOut>> Transitions { get; }
+		StepResult<TIn, TOut> OnEntry(TIn input);
+		StepResult<TIn, TOut> OnReentry(TIn input);
+		Task<StepResult<TIn, TOut>> OnEntryAsync(TIn input);
+		Task<StepResult<TIn, TOut>> OnReentryAsync(TIn input);
+		void OnExit(TIn input, IState<TIn, TOut> next);
+	}
+
 	public delegate void InputEvent<TIn>(TIn input);
 
 	/// <summary>
@@ -20,11 +30,16 @@ namespace TinySM
 	/// </summary>
 	/// <typeparam name="TIn"></typeparam>
 	/// <typeparam name="TOut"></typeparam>
-	public class State<TIn, TOut> : TrackedObject, IState
+	public class State<TIn, TOut> : TrackedObject, IState<TIn, TOut>
 	{
-		public virtual List<Transition<TIn, TOut>> Transitions { get; set; }
+		public virtual List<Transition<TIn, TOut>> Transitions { get; private set; }
+
 		[JsonIgnore]
-		public StateMachineDefinition<TIn, TOut> Definition { get => m_definition; set => m_definition = value; }
+		public IStateMachineDefinition<TIn, TOut> Definition 
+		{ 
+			get => m_definition.Value; 
+			set => m_definition = new Reference<IStateMachineDefinition<TIn, TOut>>(value); 
+		}
 		[JsonIgnore]
 		public IStateMachineDefinition DefinitionInterface => Definition;
 		[JsonIgnore]
@@ -34,40 +49,11 @@ namespace TinySM
 		[JsonIgnore]
 		public InputEvent<TIn> OnReentryEvent;
 		[JsonProperty]
-		private Reference<StateMachineDefinition<TIn, TOut>> m_definition;
+		private Reference<IStateMachineDefinition<TIn, TOut>> m_definition;
 
 		public State()
 		{
 			Transitions = new List<Transition<TIn, TOut>>();
-		}
-
-		/// <summary>
-		/// Add a transition from this state to another with a given condition.
-		/// </summary>
-		/// <param name="destination"></param>
-		/// <param name="condition"></param>
-		/// <returns></returns>
-		public State<TIn, TOut> AddTransition(State<TIn, TOut> destination, ICondition<TIn, TOut> condition)
-		{
-			if(Definition == null)
-			{
-				throw new Exception($"State {GUID} does not have an attached definition. Make sure you have called StateMachineDefintion<TIn, TOut>.AddState");
-			}
-			Definition.AddState(destination);	// We make sure the definition knows about the state
-			Transitions.Add(new Transition<TIn, TOut>(this, destination, condition));
-			return this;
-		}
-
-		/// <summary>
-		/// Attempts to find the last added state adds a transition to it
-		/// </summary>
-		/// <param name="condition"></param>
-		/// <returns></returns>
-		public State<TIn, TOut> AddTransitionToPrevious(ICondition<TIn, TOut> condition)
-		{
-			var destination = Definition.States.Last(s => s.GUID != GUID);
-			Transitions.Add(new Transition<TIn, TOut>(this, destination, condition));
-			return this;
 		}
 
 		/// <summary>
@@ -120,6 +106,6 @@ namespace TinySM
 		/// Fired when the state is left to another state
 		/// </summary>
 		/// <param name="input">The input to the next state</param>
-		public virtual void OnExit(TIn input, State<TIn, TOut> next) { }
+		public virtual void OnExit(TIn input, IState<TIn, TOut> next) { }
 	}
 }

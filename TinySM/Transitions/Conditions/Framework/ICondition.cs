@@ -8,6 +8,6 @@ namespace TinySM.Conditions
 
 	public interface ICondition<TIn, TOut> : ICondition
 	{
-		bool ShouldTransition(State<TIn, TOut> origin, State<TIn, TOut> destination, TIn input);
+		bool ShouldTransition(IState<TIn, TOut> origin, IState<TIn, TOut> destination, TIn input);
 	}
 }

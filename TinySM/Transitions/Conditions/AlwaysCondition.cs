@@ -6,7 +6,7 @@
 		{
 		}
 
-		protected override bool ShouldTransitionInternal(State<TIn, TOut> origin, State<TIn, TOut> destination, TIn input)
+		protected override bool ShouldTransitionInternal(IState<TIn, TOut> origin, IState<TIn, TOut> destination, TIn input)
 		{
 			return true;
 		}

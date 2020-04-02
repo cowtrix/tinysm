@@ -8,9 +8,10 @@ namespace TinySM
 		Guid GUID { get; set; }
 	}
 
-	public struct Reference<T> : IReference where T : TrackedObject
+	public struct Reference<T> : IReference where T : class, ITrackedObject
 	{
 		public Guid GUID { get; set; }
+
 		[JsonIgnore]
 		public T Value => TrackedObject.Get<T>(GUID);
 
