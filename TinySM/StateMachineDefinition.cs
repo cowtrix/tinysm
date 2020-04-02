@@ -39,7 +39,7 @@ namespace TinySM
 		/// <summary>
 		/// Constructor should only be called by Json deserializer
 		/// </summary>
-		internal StateMachineDefinition() : base() 
+		public StateMachineDefinition() : base() 
 		{
 			States = new List<IState<TIn, TOut>>();
 		}

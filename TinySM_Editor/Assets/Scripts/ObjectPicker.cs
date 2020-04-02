@@ -22,7 +22,7 @@ public class ObjectPicker : LevelSingleton<ObjectPicker>
         gameObject.SetActive(false);
     }
 
-    public void Pick(Type type, Action<TrackedObject> onSelect, bool canCancel = false)
+    public void Pick(Type type, Action<ITrackedObject> onSelect, bool canCancel = false)
     {
         if(!typeof(TrackedObject).IsAssignableFrom(type))
         {
